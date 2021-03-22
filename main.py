@@ -15,4 +15,4 @@ def animate(state: AnimState):
 
 
 if __name__ == '__main__':
-    animate(AnimState)
+    animate('AnimState')
