@@ -14,5 +14,5 @@ def animate(state: AnimState):
     state.wait()  # Pause at the end
 
 
-if __name__ == '__main__':
-    animate('AnimState')
+#if __name__ == '__main__':
+ #   animate('AnimState')
