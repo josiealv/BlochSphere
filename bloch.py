@@ -1,12 +1,13 @@
-import matplotlib as mpl
+from cmath import pi, sin, cos
+
+import basis as basis
+import imageio
 from pylab import *
 from qutip import *
-from matplotlib import cm
-import imageio
-
+from command_line import parse
 
 def animate_bloch(states, duration=0.1, save_all=False):
-    b = Bloch()
+    b = Bloch3d()
     b.vector_color = ['r']
     b.view = [-40, 30]
     images = []
@@ -21,7 +22,7 @@ def animate_bloch(states, duration=0.1, save_all=False):
 
     # customize sphere properties ##
     b.point_color = list(colors)  # options: 'r', 'g', 'b' etc.
-    b.point_marker = ['o']
+    #b.point_marker = ['o']
     b.point_size = [30]
 
     for i in range(length):
