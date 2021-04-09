@@ -1,12 +1,16 @@
 from cmath import pi, sin, cos
 
-import basis as basis
 import imageio
 from pylab import *
 from qutip import *
 from command_line import parse
 
 def animate_bloch(states, duration=0.1, save_all=False):
+    #call get_input from parse
+    #extract input from list and then put into respective variables
+    for x in parse.get_input():
+        alpha = x[0]
+
     b = Bloch3d()
     b.vector_color = ['r']
     b.view = [-40, 30]
