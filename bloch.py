@@ -3,8 +3,8 @@ from pylab import *
 from qutip import *
 from matplotlib import cm
 import imageio
-import PySimpleGUI as sg
-
+# import PySimpleGUI as sg
+from tkinter import Canvas, PhotoImage, Tk
 
 def animate_bloch(states, duration=0.1, save_all=False):
     b = Bloch()
@@ -37,13 +37,22 @@ def animate_bloch(states, duration=0.1, save_all=False):
             b.save(filename)
         images.append(imageio.imread(filename))
     imageio.mimsave('bloch_anim.gif', images, duration=duration)
-    layout = [
-        [sg.Image('bloch_anim.gif')],
-    ]
-    window = sg.Window('Bloch Sphere', layout)
-    event, values = window.read()
-    window.close()
-    sg.Popup(event, values[0])  
+    window = Tk()
+    window.title('Bloch Sphere')
+    canvas = Canvas(window, width = 500, height = 500)
+    canvas.pack()
+    bloch_gif = PhotoImage(file = 'bloch_anim.gif')
+    canvas.create_image(0, 0, image=bloch_gif, anchor = 'nw')
+   # layout = [
+    #    [sg.Image('bloch_anim.gif')],
+   # ]
+   # window = sg.Window('Bloch Sphere', layout)
+   # while True:             
+   #     event, values = window.read()
+    #    if event == sg.WIN_CLOSED:
+    #        break
+   # window.close()
+    # sg.Popup(event, values[0])  
 
 
 states = []
