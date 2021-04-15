@@ -1,38 +1,23 @@
-import argparse
+import sys
 from cmath import pi, sin, cos
 
+import matplotlib as mpl
+
 import imageio
-from pylab import *
-from qutip import *
 
 # to test: run "./command_line.py -i alpha -n time -n spacing
-def getOptions(args=sys.argv[1:]):
-    parser = argparse.ArgumentParser(description="Parses command.")
-    parser.add_argument("-i", "--input", help="Your input file.")
-    parser.add_argument("-o", "--output", help="Your destination output file.")
-    parser.add_argument("-n", "--num0", type=int, help="A number.")
-    parser.add_argument("-n", "--num1", type=int, help="A number.")
-    parser.add_argument("-v", "--verbose", dest='verbose', action='store_true', help="Verbose mode.")
-    opts = parser.parse_args(args)
+from matplotlib import cm
+import numpy
+from qutip import Bloch3d, basis, Bloch
 
-    return opts
+num_args = len(sys.argv)
+items = []
 
-options = getOptions(sys.argv[1:])
-
-alpha = options.input
-beta = options.output
-spacing = options.num0
-time = options.num1
-
-items = [alpha, beta, spacing, time]
+for i in range(num_args):
+    items.append(i)
 
 def animate_bloch(states, duration=0.1, save_all=False):
-    #call get_input from parse
-    #extract input from list and then put into respective variables
-    for x in items:
-        alpha = x[0]
-
-    b = Bloch3d()
+    b = Bloch()
     b.vector_color = ['r']
     b.view = [-40, 30]
     images = []
@@ -47,7 +32,7 @@ def animate_bloch(states, duration=0.1, save_all=False):
 
     # customize sphere properties ##
     b.point_color = list(colors)  # options: 'r', 'g', 'b' etc.
-    #b.point_marker = ['o']
+    b.point_marker = ['o']
     b.point_size = [30]
 
     for i in range(length):
@@ -65,7 +50,7 @@ def animate_bloch(states, duration=0.1, save_all=False):
 
 
 states = []
-thetas = linspace(0, pi, 21)
+thetas = numpy.linspace(0, pi, 21)
 for theta in thetas:
     states.append((cos(theta / 2) * basis(2, 0) + sin(theta / 2) * basis(2, 1)).unit())
 
