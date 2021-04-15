@@ -11,10 +11,12 @@ import numpy
 from qutip import Bloch3d, basis, Bloch
 
 num_args = len(sys.argv)
-items = []
 
-for i in range(num_args):
-    items.append(i)
+if "-v" in sys.argv:
+    vectors = sys.argv[3]  # to run command looks like >> Python3 bloch.py -v [list of vectors]
+if "-c" in sys.argv:
+    pass  # do something with closed form
+
 
 def animate_bloch(states, duration=0.1, save_all=False):
     b = Bloch()
