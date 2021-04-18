@@ -1,22 +1,20 @@
 import sys
 from cmath import pi, sin, cos
+from math import atan2
 
 import matplotlib as mpl
-
 import imageio
-
-# to test: run "./command_line.py -i alpha -n time -n spacing
 from matplotlib import cm
 import numpy
 from qutip import Bloch3d, basis, Bloch
 
 num_args = len(sys.argv)
+comp_input = 0
 
 if "-v" in sys.argv:
     vectors = sys.argv[3]  # to run command looks like >> Python3 bloch.py -v [list of vectors]
-if "-c" in sys.argv:
-    pass  # do something with closed form
-
+if "-c" in sys.argv:        # to run command looks like >> Python3 bloch.py -c alpha+betaj
+    comp_input = complex(sys.argv[3])
 
 def animate_bloch(states, duration=0.1, save_all=False):
     b = Bloch()
@@ -50,10 +48,25 @@ def animate_bloch(states, duration=0.1, save_all=False):
         images.append(imageio.imread(filename))
     imageio.mimsave('bloch_anim.gif', images, duration=duration)
 
+#   state vectors
+if comp_input == 0:
+    states = []
+    thetas = numpy.linspace(0, pi, 21)
+    for theta in thetas:
+        states.append((cos(theta / 2) * basis(2, 0) + sin(theta / 2) * basis(2, 1)).unit())
 
-states = []
-thetas = numpy.linspace(0, pi, 21)
-for theta in thetas:
+    animate_bloch(states, duration=0.1, save_all=False)
+
+else: #  use alpha and beta to get thetas -> plug in range for states vectors
+    alpha = comp_input.real
+    beta = comp_input.imag
+    r = numpy.sqrt(abs(alpha)*abs(alpha) + abs(beta)*abs(beta))
+    theta = numpy.arccos2(alpha)
+    phi = numpy.arctan2(beta / alpha) #need to get imaginary of beta
+
+    states = []
+    # thetas = numpy.linspace(0, pi, 21)
+    # for theta in thetas:
     states.append((cos(theta / 2) * basis(2, 0) + sin(theta / 2) * basis(2, 1)).unit())
 
-animate_bloch(states, duration=0.1, save_all=False)
+    animate_bloch(states, duration=0.1, save_all=False)
