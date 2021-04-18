@@ -3,8 +3,8 @@ from pylab import *
 from qutip import *
 from matplotlib import cm
 import imageio
-# import PySimpleGUI as sg
-from tkinter import Canvas, PhotoImage, Tk
+from tkinter import Canvas, PhotoImage, Tk, mainloop
+from math import cos, sin, pi
 
 def animate_bloch(states, duration=0.1, save_all=False):
     b = Bloch()
@@ -37,27 +37,17 @@ def animate_bloch(states, duration=0.1, save_all=False):
             b.save(filename)
         images.append(imageio.imread(filename))
     imageio.mimsave('bloch_anim.gif', images, duration=duration)
+    
     window = Tk()
     window.title('Bloch Sphere')
     canvas = Canvas(window, width = 500, height = 500)
     canvas.pack()
-    bloch_gif = PhotoImage(file = 'bloch_anim.gif')
+    bloch_gif = PhotoImage(file = 'bloch_anim.gif', master=window)
     canvas.create_image(0, 0, image=bloch_gif, anchor = 'nw')
-   # layout = [
-    #    [sg.Image('bloch_anim.gif')],
-   # ]
-   # window = sg.Window('Bloch Sphere', layout)
-   # while True:             
-   #     event, values = window.read()
-    #    if event == sg.WIN_CLOSED:
-    #        break
-   # window.close()
-    # sg.Popup(event, values[0])  
-
+    mainloop()
 
 states = []
 thetas = linspace(0, pi, 21)
 for theta in thetas:
     states.append((cos(theta / 2) * basis(2, 0) + sin(theta / 2) * basis(2, 1)).unit())
-
 animate_bloch(states, duration=0.1, save_all=False)
