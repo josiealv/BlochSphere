@@ -5,6 +5,7 @@ from matplotlib import cm
 import imageio
 from tkinter import Canvas, PhotoImage, Tk, mainloop
 from math import cos, sin, pi
+from PIL.Image import Image
 
 def animate_bloch(states, duration=0.1, save_all=False):
     b = Bloch()
@@ -37,14 +38,18 @@ def animate_bloch(states, duration=0.1, save_all=False):
             b.save(filename)
         images.append(imageio.imread(filename))
     imageio.mimsave('bloch_anim.gif', images, duration=duration)
-    
+    displayGif()
+
+def displayGif():
+    #gif_info = Image.open("bloch_anim.gif")   , format="gif -index %i",
+    #frames = gif_info.n_frames
     window = Tk()
     window.title('Bloch Sphere')
     canvas = Canvas(window, width = 500, height = 500)
     canvas.pack()
     bloch_gif = PhotoImage(file = 'bloch_anim.gif', master=window)
     canvas.create_image(0, 0, image=bloch_gif, anchor = 'nw')
-    mainloop()
+    window.mainloop()
 
 states = []
 thetas = linspace(0, pi, 21)
