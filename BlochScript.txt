@@ -1,4 +1,4 @@
 #!/bin/bash
-python3 tempbloch.py
+python3 bloch.py 1+0j,0+1j,0+0j
 wait 
 python3 gui.py
