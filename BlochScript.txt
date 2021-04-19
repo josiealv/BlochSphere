@@ -1,0 +1,4 @@
+#!/bin/bash
+python3 tempbloch.py
+wait 
+python3 gui.py
