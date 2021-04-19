@@ -30,15 +30,20 @@ def animate_bloch_states(states, duration=0.1, save_all=False):
     b.point_marker = ['o']
     b.point_size = [30]
 
+    complex_arr = []
     for i in range(length):
-        x = ((basis(2, 0) + (states[i])) * basis(2, 1)).unit()
-        # y = (basis(2,0) + (states[]) * basis(2,1)).unit()
+        z = (basis(2, 0) + states[i] * basis(2, 1)).unit()
+        #y = (basis(2, 0) + states[i] * basis(2, 1)).unit()
+        #x = (basis(2, 0) + states[i] * basis(2, 1)).unit()
+        #complex_arr.append(x)
+        #complex_arr.append(y)
+        complex_arr.append(z)
+    for j in range(length):
         b.clear()
-        b.add_states(x)
-        b.add_states(states[:(i + 1)], 'point')
+        b.add_states(complex_arr)
         if save_all:
             b.save(dirc='tmp')  # saving images to tmp directory
-            filename = "tmp/bloch_%01d.png" % i
+            filename = "tmp/bloch_%01d.png" % j
         else:
             filename = 'temp_file.png'
             b.save(filename)
@@ -78,13 +83,21 @@ def animate_bloch_vector(vectors, duration=0.1, save_all=False):
     imageio.mimsave('bloch_anim.gif', images, duration=duration)
 
 if "-s" in sys.argv:
-    array = sys.argv[2].split()  # to run command looks like >> Python3 bloch.py -v [list of vectors]
-    animate_bloch_states(array, duration=0.1, save_all=False)
+    arr_norm = sys.argv[2].split(",")  # to run command looks like >> Python3 bloch.py -v [list of vectors]
+    complex_arr = []
+    for i in arr_norm:
+        complex_arr.append(complex(i))
+    print(complex_arr)
+    animate_bloch_states(complex_arr, duration=0.1, save_all=False)
 elif "-v" in sys.argv:
-    vec = sys.argv[2].split()
-    animate_bloch_vector(vec, duration=0.1, save_all=False)
+    vec = sys.argv[2].split(",")
+    complex_vec = []
+    for i in vec:
+        complex_vec.append(complex(i))
+    animate_bloch_vector(complex_vec, duration=0.1, save_all=False)
 elif "-c" in sys.argv:        # to run command looks like >> Python3 bloch.py -c alpha+betaj
     comp_input = complex(sys.argv[2])
+    animate_bloch_states(comp_input, duration=0.1, save_all=False)
 
 
 
