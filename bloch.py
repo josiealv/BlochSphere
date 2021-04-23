@@ -43,11 +43,13 @@ def animate_bloch_states(states, duration=0.1, save_all=False):
         images.append(imageio.imread(filename))
     imageio.mimsave('bloch_anim.gif', images, duration=duration)
 
-def external_animate_bloch(alphas, betas, duration=0.1, save_all=False):
-    if(len(alphas)==len(betas)):
+def external_animate_bloch(alpha_reals, alpha_imags, beta_reals, beta_imags, duration=0.1, save_all=False):
+    if((len(alpha_reals)==len(beta_reals)) and len(alpha_imags)==len(beta_imags)):
         complex_arr=[]
-        for i in range(0, len(alphas)):
-           complex_arr.append((complex(alphas[i])*basis(2, 0) + complex(betas[i]) * basis(2, 1)).unit())
+        for i in range(0, len(alpha_reals)):
+            alpha = complex(alpha_reals[i], alpha_imags[i])
+            beta = complex(beta_reals[i], beta_imags[i])
+            complex_arr.append((alpha * basis(2, 0) + beta * basis(2, 1)))
         animate_bloch_states(complex_arr, duration=0.1, save_all=False)
     else:
         print("Alphas and Betas length do not match")
@@ -57,7 +59,7 @@ if "-s" in sys.argv:
     if len(arr_norm)%2==0: 
         complex_arr=[]
         for i in range(0, len(arr_norm), 2):
-            complex_arr.append((complex(arr_norm[i])*basis(2, 0) + complex(arr_norm[i+1]) * basis(2, 1)).unit())
+            complex_arr.append((complex(arr_norm[i])*basis(2, 0) + complex(arr_norm[i+1]) * basis(2, 1)))
         animate_bloch_states(complex_arr, duration=0.1, save_all=False)
     else:
         print("Each state vector must have an alpha and a beta")
