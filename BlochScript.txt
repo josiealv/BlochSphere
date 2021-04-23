@@ -1,4 +1,4 @@
 #!/bin/bash
-python3 bloch.py 1+0j,0+1j,0+0j
+python3 bloch.py -s 1+0j,0+1j,0+0j,2+1j
 wait 
 python3 gui.py

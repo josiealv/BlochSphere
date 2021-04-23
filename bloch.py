@@ -43,50 +43,24 @@ def animate_bloch_states(states, duration=0.1, save_all=False):
         images.append(imageio.imread(filename))
     imageio.mimsave('bloch_anim.gif', images, duration=duration)
 
-def animate_bloch_vector(vectors, duration=0.1, save_all=False):
-    b = Bloch()
-    b.vector_color = ['r']
-    b.view = [-40, 30]
-    images = []
-    try:
-        length = len(vectors)
-    except:
-        length = 1
-        vectors = [vectors]
-    # normalize colors to the length of data ##
-    nrm = mpl.colors.Normalize(0, length)
-    colors = cm.cool(nrm(range(length)))  # options: cool, summer, winter, autumn etc.
-
-    # customize sphere properties ##
-    b.point_color = list(colors)  # options: 'r', 'g', 'b' etc.
-    b.point_marker = ['o']
-    b.point_size = [30]
-
-    for i in range(length):
-        b.clear()
-        b.add_vectors(i)
-        b.add_vectors(vectors[:(i + 1)], 'point')
-        if save_all:
-            b.save(dirc='tmp')  # saving images to tmp directory
-            filename = "tmp/bloch_%01d.png" % i
-        else:
-            filename = 'temp_file.png'
-            b.save(filename)
-        images.append(imageio.imread(filename))
-    imageio.mimsave('bloch_anim.gif', images, duration=duration)
+def external_animate_bloch(alphas, betas, duration=0.1, save_all=False):
+    if(len(alphas)==len(betas)):
+        complex_arr=[]
+        for i in range(0, len(alphas)):
+           complex_arr.append((complex(alphas[i])*basis(2, 0) + complex(betas[i]) * basis(2, 1)).unit())
+        animate_bloch_states(complex_arr, duration=0.1, save_all=False)
+    else:
+        print("Alphas and Betas length do not match")
 
 if "-s" in sys.argv:
     arr_norm = sys.argv[2].split(",")  # to run command looks like >> Python3 bloch.py -v [list of vectors]
-    complex_arr = []
-    for i in arr_norm:
-        complex_arr.append((basis(2, 0) + complex(i) * basis(2, 1)).unit())
-    animate_bloch_states(complex_arr, duration=0.1, save_all=False)
-elif "-v" in sys.argv:
-    vec = sys.argv[2].split(",")
-    complex_vec = []
-    for i in vec:
-        complex_vec.append(complex(i))
-    animate_bloch_vector(complex_vec, duration=0.1, save_all=False)
+    if len(arr_norm)%2==0: 
+        complex_arr=[]
+        for i in range(0, len(arr_norm), 2):
+            complex_arr.append((complex(arr_norm[i])*basis(2, 0) + complex(arr_norm[i+1]) * basis(2, 1)).unit())
+        animate_bloch_states(complex_arr, duration=0.1, save_all=False)
+    else:
+        print("Each state vector must have an alpha and a beta")
 elif "-c" in sys.argv:        # to run command looks like >> Python3 bloch.py -c alpha+betaj
     comp_input = complex(sys.argv[2])
     animate_bloch_states(comp_input, duration=0.1, save_all=False)

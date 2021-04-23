@@ -1,22 +1,3 @@
-#
-# from PIL import Image
-# import cv2
-#
-# canvas = Image.new("RGB", (500, 500), "white")
-# gif = Image.open('bloch_anim.gif', 'r')
-# frames = []
-#
-# try:
-#     while 1:
-#         frames.append(gif.copy())
-#         gif.seek(len(frames))
-# except EOFError:
-#     pass
-#
-# for frame in frames:
-#     canvas.paste(frame)
-#     canvas.show()
-#
 from tkinter import *
 from PIL import Image
 import time
@@ -33,6 +14,7 @@ except EOFError:
     pass
 
 root = Tk()
+root.title("Bloch Sphere")
 frameCnt = len(frames)
 frames = [PhotoImage(file='bloch_anim.gif', format='gif -index %i' %(i)) for i in range(frameCnt)]
 
