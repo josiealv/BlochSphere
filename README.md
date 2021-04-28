@@ -9,11 +9,11 @@ Data Visualisation of a Bloch Sphere
 ## Before Starting
 **Installation:**
 1. Make sure to have Python 2.7 (or higher) installed
-    - Install at: (https://www.python.org/downloads/)
+    - Install at: https://www.python.org/downloads/
 2. Install Tkinter 
--Run on command line: `python3 -m pip install pysimplegui`
+    - Run on command line: `python3 -m pip install pysimplegui`
 3. Install the Bloch Sphere library from QuTip
--Installation instructions at: (https://pypi.org/project/bloch-sphere/)
+-Installation instructions at: https://pypi.org/project/bloch-sphere/
 
 ## About external_animate_bloch()
 - The first 4 parameters of the function represent the real and imaginary components of complex number, alpha and beta
