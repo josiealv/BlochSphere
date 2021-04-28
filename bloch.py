@@ -9,21 +9,21 @@ import numpy as np
 from qutip import Bloch3d, basis, Bloch
 import gui
 
-num_args = len(sys.argv)
-comp_input = 0
-
 
 def animate_bloch_states(states, save_file, duration=0.1, save_all=False):
+    azimuthal = -40
+    elevation = 20
     print("file name: %s" % save_file)
     b = Bloch()
     b.vector_color = ['r']
-    b.view = [-40, 30]
-    images = []
+    b.view = [azimuthal, elevation]
     try:
         length = len(states)
     except:
         length = 1
         states = [states]
+
+    images = [None] * length
     # normalize colors to the length of data ##
     nrm = mpl.colors.Normalize(0, length)
     colors = cm.cool(nrm(range(length)))  # options: cool, summer, winter, autumn etc.
@@ -33,17 +33,19 @@ def animate_bloch_states(states, save_file, duration=0.1, save_all=False):
     b.point_marker = ['o']
     b.point_size = [30]
 
+    # for loop creates the images for gif.
     for j in range(length):
         b.clear()
         b.add_states(states[j])
-        b.add_states(states[:(j + 1)], 'point')
+        b.add_states(states[:(j + 1)], 'point')  # expensive operation that is necessary and cannot be made faster
         if save_all:
             b.save(dirc='tmp')  # saving images to tmp directory
             filename = "tmp/bloch_%01d.png" % j
         else:
             filename = 'temp_file.png'
             b.save(filename)
-        images.append(imageio.imread(filename))
+        images[j] = (imageio.imread(filename))
+
     imageio.mimsave(save_file, images, duration=duration)
 
     gui.main(save_file)
@@ -65,16 +67,27 @@ def external_animate_bloch(alpha_reals, alpha_imags, beta_reals, beta_imags, fil
         print("Alphas and Betas length do not match")
 
 
-if "-s" in sys.argv:
-    arr_norm = sys.argv[2].split(",")  # to run command looks like >> Python3 bloch.py -v [list of vectors]
-    if len(arr_norm) % 2 == 0:
-        complex_array = []
-        for i in range(0, len(arr_norm), 2):
-            complex_array.append((complex(arr_norm[i]) * basis(2, 0) + complex(arr_norm[i + 1]) * basis(2, 1)))
-        animate_bloch_states(complex_array, duration=0.1, save_all=False)
+def main():
+    if sys.argv[0] != "bloch.py":
+        pass
     else:
-        print("Each state vector must have an alpha and a beta")
+        num_args = len(sys.argv)
 
-# elif "-c" in sys.argv:  # to run command looks like >> Python3 bloch.py -c alpha+betaj
-#     comp_input = complex(sys.argv[2])
-#     animate_bloch_states(comp_input, duration=0.1, save_all=False)
+        if num_args < 2:
+            print("Not enough command line arguments.")
+        elif num_args > 2:
+            print("Too many command line arguments.")
+        else:
+            #                                       argv[0]    argv[1]
+            # to run command looks like >> Python3 bloch.py [list of vectors]
+            arr_norm = sys.argv[1].split(",")
+            if len(arr_norm) % 2 == 0:
+                complex_array = []
+                for i in range(0, len(arr_norm), 2):
+                    complex_array.append((complex(arr_norm[i]) * basis(2, 0) + complex(arr_norm[i + 1]) * basis(2, 1)))
+                animate_bloch_states(complex_array, duration=0.1, save_all=False)
+            else:
+                print("Each state vector must have an alpha and a beta")
+
+
+main()
