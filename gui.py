@@ -3,6 +3,7 @@ from PIL import Image
 import time
 import os
 
+# opens generated gif in a pop-up window
 
 def main(filename):
     gif = Image.open(filename, 'r')
