@@ -6,17 +6,19 @@ import imageio
 from tkinter import Canvas, PhotoImage, Tk, mainloop
 from math import cos, sin, pi
 from PIL.Image import Image
+import gui 
 
 def animate_bloch_states(states, save_file, duration=0.1, save_all=False):
     b = Bloch()
     b.vector_color = ['r']
     b.view = [-40, 30]
-    images = []
     try:
         length = len(states)
     except:
         length = 1
         states = [states]
+    
+    images = [None] * length  # setting length of images array to help decrease time gif is created
     # normalize colors to the length of data ##
     nrm = mpl.colors.Normalize(0, length)
     colors = cm.cool(nrm(range(length)))  # options: cool, summer, winter, autumn etc.
@@ -26,18 +28,17 @@ def animate_bloch_states(states, save_file, duration=0.1, save_all=False):
     b.point_marker = ['o']
     b.point_size = [30]
 
-    for i in range(length):
+    for j in range(length):
         b.clear()
-        b.add_states(states[i])
-        b.add_states(states[:(i + 1)], 'point')
+        b.add_states(states[j])
+        b.add_states(states[:(j + 1)], 'point')
         if save_all:
             b.save(dirc='tmp')  # saving images to tmp directory
-            filename = "tmp/bloch_%01d.png" % i
+            filename = "tmp/bloch_%01d.png" % j
         else:
             filename = 'temp_file.png'
             b.save(filename)
         images[j] = (imageio.imread(filename))  # combines all the images into one gif (one image)
-
     imageio.mimsave(save_file, images, duration=duration)
     # calling gui.py file -> passing in the gif
     gui.main(save_file)
@@ -51,9 +52,9 @@ def animate_multiple_states(vect_complex_arr, save_file, numV, duration=0.1, sav
     
 
     # customize sphere properties ##
-    b.point_color = list(colors)  # options: 'r', 'g', 'b' etc.
-    b.point_marker = ['o']
-    b.point_size = [30]
+    # b.point_color = list(colors)  # options: 'r', 'g', 'b' etc.
+    # b.point_marker = ['o']
+    # b.point_size = [30]
 
 def external_animate_bloch_multiple(numV, alpha_reals, alpha_imags, beta_reals, beta_imags, filename):
     if(len(alpha_reals)!= numV):

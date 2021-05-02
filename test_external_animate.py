@@ -31,4 +31,4 @@ for i in range(0, 100):
 #     alphasI[i] = 0
 #     betasR[i] = (np.sin(omega * i))
 #     betasI[i] = 0
-# b.external_animate_bloch(alphasR, alphasI, betasR, betasI, 'test2')
+external_animate_bloch(alphasR, alphasI, betasR, betasI, 'test2')
