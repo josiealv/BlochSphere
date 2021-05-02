@@ -7,7 +7,7 @@ from tkinter import Canvas, PhotoImage, Tk, mainloop
 from math import cos, sin, pi
 from PIL.Image import Image
 
-def animate_bloch(states, duration=0.1, save_all=False):
+def animate_bloch_states(states, save_file, duration=0.1, save_all=False):
     b = Bloch()
     b.vector_color = ['r']
     b.view = [-40, 30]
