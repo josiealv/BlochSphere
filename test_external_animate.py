@@ -1,7 +1,7 @@
 from bloch import external_animate_bloch
 import numpy as np
 
-length = 100
+length = 200
 betasR = [None] * length
 alphasR = [None] * length
 alphasI = [None] * length
@@ -26,9 +26,10 @@ for i in range(0, 100):
     betasI[i] = (np.sin(omega * i) * np.exp(-i * gamma) * np.sin(phi))
 
 # # # example 2 (Rabi oscillations)
-# for i in range(0, 100):
-#     alphasR[i] = (np.cos(omega * i))
-#     alphasI[i] = 0
-#     betasR[i] = (np.sin(omega * i))
-#     betasI[i] = 0
+for i in range(100, 200):
+    alphasR[i] = (np.cos(omega * i))
+    alphasI[i] = 0
+    betasR[i] = (np.sin(omega * i))
+    betasI[i] = 0
 external_animate_bloch(alphasR, alphasI, betasR, betasI, 'test2')
+

@@ -1,12 +1,13 @@
+import sys
+from cmath import pi, sin, cos
+from math import atan2
+
 import matplotlib as mpl
-from pylab import *
-from qutip import *
-from matplotlib import cm
 import imageio
-from tkinter import Canvas, PhotoImage, Tk, mainloop
-from math import cos, sin, pi
-from PIL.Image import Image
-import gui 
+from matplotlib import cm
+import numpy as np
+from qutip import Bloch3d, basis, Bloch
+import gui
 
 def animate_bloch_states(states, save_file, duration=0.1, save_all=False):
     b = Bloch()
@@ -42,6 +43,27 @@ def animate_bloch_states(states, save_file, duration=0.1, save_all=False):
     imageio.mimsave(save_file, images, duration=duration)
     # calling gui.py file -> passing in the gif
     gui.main(save_file)
+
+def plot_state_vectors (states, save_file):
+    save_file += '.png'
+    b = Bloch()
+    b.view = [-40, 30]
+    try:
+        length = len(states)
+    except:
+        length = 1
+        states = [states]
+    
+    images = [None] * length  # setting length of images array to help decrease time gif is created
+    # normalize colors to the length of data ##
+    nrm = mpl.colors.Normalize(0, length)
+    colors = cm.cool(nrm(range(length)))  # options: cool, summer, winter, autumn etc.
+    # customize sphere properties ##
+    b.point_color = list(colors)  # options: 'r', 'g', 'b' etc.
+    b.point_marker = ['o']
+    b.point_size = [30]
+    b.add_states(states)
+    b.save(save_file)
 
 def animate_multiple_states(vect_complex_arr, save_file, numV, duration=0.1, save_all=False):
     azimuthal = -40  # can customize to chang view of gif
@@ -124,8 +146,9 @@ def main():
                 #   3)  calling function to create the bloch sphere gif
                 for i in range(0, len(arr_norm), 2):
                     complex_array.append((complex(arr_norm[i]) * basis(2, 0) + complex(arr_norm[i + 1]) * basis(2, 1)))
-                filename = input("type in filename (without extension) e.g. 'test_file' ") + ".gif"
-                animate_bloch_states(complex_array, filename, duration=0.1, save_all=False)
+                filename = input("type in filename (without extension) e.g. 'test_file' ") # + ".gif"
+                #animate_bloch_states(complex_array, filename, duration=0.1, save_all=False)
+                # plot_state_vectors(complex_array, filename)
             else:
                 print("Each state vector must have an alpha and a beta")
 
