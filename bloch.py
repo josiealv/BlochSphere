@@ -11,8 +11,8 @@ import gui
 
 
 def animate_bloch_states(states, save_file, duration=0.1, save_all=False):
-    azimuthal = -40  # can customize to chang view of gif
-    elevation = 20  # can customize to chang view of gif
+    azimuthal = -40  # can customize to change view of gif
+    elevation = 20  # can customize to change view of gif
     print("file name: %s" % save_file)  # printing out inputted file name in the terminal
     b = Bloch()  # creating bloch object
     b.vector_color = ['r']
@@ -34,6 +34,7 @@ def animate_bloch_states(states, save_file, duration=0.1, save_all=False):
     b.point_size = [30]
 
     # for loop creates the single images for gif.
+
     for j in range(length):
         b.clear()
         b.add_states(states[j])
@@ -98,7 +99,8 @@ def main():
                 #   3)  calling function to create the bloch sphere gif
                 for i in range(0, len(arr_norm), 2):
                     complex_array.append((complex(arr_norm[i]) * basis(2, 0) + complex(arr_norm[i + 1]) * basis(2, 1)))
-                animate_bloch_states(complex_array, duration=0.1, save_all=False)
+                filename = input("type in filename (without extension) e.g. 'test_file' ") + ".gif"
+                animate_bloch_states(complex_array, filename, duration=0.1, save_all=False)
             else:
                 print("Each state vector must have an alpha and a beta")
 

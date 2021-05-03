@@ -1,4 +1,5 @@
-from tkinter import *
+from tkinter import PhotoImage, Label, Tk
+
 from PIL import Image
 import time
 import os
@@ -19,7 +20,7 @@ def main(filename):
     root = Tk()
     root.title(filename)
     frameCnt = len(frames)
-    frames = [PhotoImage(file=filename, format='gif -index %i' % (i)) for i in range(frameCnt)]
+    frames = [PhotoImage(master=root, file=filename, format='gif -index %i' % (i)) for i in range(frameCnt)]
 
     def update(ind):
         frame = frames[ind]
