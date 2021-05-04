@@ -44,7 +44,7 @@ def animate_bloch_states(states, save_file, duration=0.1, save_all=False):
     # calling gui.py file -> passing in the gif
     gui.main(save_file)
 
-def plot_state_vectors (states, save_file):
+def plot_state_vectors (states, save_file): #no animation, just show an image of multiple state vectors on the bloch sphere
     save_file += '.png'
     b = Bloch()
     b.view = [-40, 30]
@@ -100,11 +100,15 @@ def animate_multiple_states(vect_complex_arr, save_file, numV, duration=0.1, sav
             if (j < curr_vect_len):
                 curr_vect_complex_arr.append(vect_complex_arr[k][j])
             else:
-                curr_vect_complex_arr.append(vect_complex_arr[curr_vect_len-1]) #animation for current vector done, make it static
+                curr_vect_complex_arr.append(vect_complex_arr[k][curr_vect_len-1]) #animation for current vector done, make it static
         b.add_states(curr_vect_complex_arr) #add all state vectors to bloch animation
-
-        for l in range (len (curr_vect_complex_arr)): #add points for each state vector
-            b.add_states(curr_vect_complex_arr[:(l + 1)], 'point')
+        
+        for l in range (numV): #add points for each state vector
+            curr_vect_len = len(vect_complex_arr[l])
+            if (j < curr_vect_len):
+                b.add_states(vect_complex_arr[l][:(j + 1)], 'point')
+            else:
+                b.add_states(vect_complex_arr[l][:((curr_vect_len-1)+1)], 'point')
 
         if save_all:
             b.save(dirc='tmp')  # saving images to tmp directory
