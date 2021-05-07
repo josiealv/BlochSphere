@@ -37,7 +37,7 @@ betas_r2 = []
 betas_i2 = []
 alphas_r2 = [] 
 alphas_i2 = [] 
-for i in range(0, 100):
+for i in range(0, 75):
     alphas_r2.append(np.cos(omega * i))
     alphas_i2.append(0)
     betas_r2.append(np.sin(omega * i))

@@ -82,16 +82,12 @@ def animate_multiple_states(vect_complex_arr, save_file, numV, duration=0.1, sav
     images = [None] * length  # setting length of images array to help decrease time gif is created
     # normalize colors to the length of data ##
     nrm = mpl.colors.Normalize(0, length)
-    colors = cm.cool(nrm(range(length)))  # options: cool, summer, winter, autumn etc.
+    # colors = cm.cool(nrm(range(length)))  # options: cool, summer, winter, autumn etc.
     # customize sphere properties ##
-    b.point_color = list(colors)  # options: 'r', 'g', 'b' etc.
+    # b.point_color = list(colors)  # options: 'r', 'g', 'b' etc.
     b.point_marker = ['o']
     b.point_size = [30]
 
-    # customize sphere properties ##
-    b.point_color = list(colors)  # options: 'r', 'g', 'b' etc.
-    b.point_marker = ['o']
-    b.point_size = [30]
     for j in range(length):
         b.clear()
         curr_vect_complex_arr = [] #get all vectors for this frame
@@ -105,11 +101,13 @@ def animate_multiple_states(vect_complex_arr, save_file, numV, duration=0.1, sav
         
         for l in range (numV): #add points for each state vector
             curr_vect_len = len(vect_complex_arr[l])
+            temp_point_arr = []
             if (j < curr_vect_len):
-                b.add_states(vect_complex_arr[l][:(j + 1)], 'point')
+                temp_point_arr.append(vect_complex_arr[l][:(j + 1)])
             else:
-                b.add_states(vect_complex_arr[l][:((curr_vect_len-1)+1)], 'point')
-
+                temp_point_arr.append(vect_complex_arr[l][:((curr_vect_len-1)+1)])
+            b.add_states(temp_point_arr, 'point')
+        
         if save_all:
             b.save(dirc='tmp')  # saving images to tmp directory
             filename = "tmp/bloch_%01d.png" % j
