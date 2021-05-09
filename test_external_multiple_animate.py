@@ -1,7 +1,7 @@
 from bloch import external_animate_bloch_multiple
 import numpy as np
 
-num_animations = 2
+num_animations = 2 #number of animations for the gif/mp4 to generate
 betasR = []
 betasI = []
 alphasR = [] 
@@ -15,7 +15,8 @@ gamma = .01  # customize gamma here
 #   Reminder: DO NOT ADD AN EXTENSION TO THE NAME (ie. {...}.gif)
 #   If no relative path is provided, it will save to the directory in which the program is running in.
 # ---------------
-file_no_extension = "test"
+filename_no_extension = "test_multiple"
+file_type = 'mp4'
 phi = (np.pi * 3) / 4
 
 # example 1 (exponential decay)
@@ -46,4 +47,4 @@ alphasR.append(alphas_r2)
 alphasI.append(alphas_i2)
 betasR.append(betas_r2)
 betasI.append(betas_i2)
-external_animate_bloch_multiple(num_animations, alphasR, alphasI, betasR, betasI, 'test')
+external_animate_bloch_multiple(num_animations, alphasR, alphasI, betasR, betasI, filename_no_extension, file_type)

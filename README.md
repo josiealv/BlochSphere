@@ -7,6 +7,8 @@ Project:
 Data Visualisation of a Bloch Sphere
 
 ## Before Starting
+cv2: pip3 install opencv-python
+imageio extra installation: pip3 install imageio-ffmpeg
 **Installation:**
 1. Make sure to have Python 3 installed
     - Install at: https://www.python.org/downloads/

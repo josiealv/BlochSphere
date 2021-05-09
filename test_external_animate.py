@@ -16,7 +16,8 @@ gamma = .01  # customize gamma here
 #   Reminder: DO NOT ADD AN EXTENSION TO THE NAME (ie. {...}.gif)
 #   If no relative path is provided, it will save to the directory in which the program is running in.
 # ---------------
-file_no_extension = "test_new"
+filename_no_extension = "test"
+file_type = 'mp4'
 phi = (np.pi * 3) / 4
 
 # example 1 (exponential decay)
@@ -32,5 +33,5 @@ for i in range(0, 100):
 #     alphasI[i] = 0
 #     betasR[i] = (np.sin(omega * i))
 #     betasI[i] = 0
-external_animate_bloch(alphasR, alphasI, betasR, betasI, file_no_extension)
+external_animate_bloch(alphasR, alphasI, betasR, betasI, filename_no_extension, file_type)
 
