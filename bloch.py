@@ -126,7 +126,7 @@ def external_animate_bloch_multiple(numV, alpha_reals, alpha_imags, beta_reals, 
     if(len(alpha_reals)==len(beta_reals)):
         for i in range (0, len(alpha_reals)):
             if(len(alpha_reals[i])!=len(beta_reals[i])):
-                print("Alphas and Betas length do not match")
+                print("Alphas and Betas do not match")
                 return
         filename += ".gif"
         vect_complex_arr = [] #2d vector to hold all vector animations      
@@ -140,7 +140,7 @@ def external_animate_bloch_multiple(numV, alpha_reals, alpha_imags, beta_reals, 
             vect_complex_arr.append(complex_arr)
         animate_multiple_states (vect_complex_arr, filename, numV)
     else:
-        print("Alphas and Betas length do not match")
+        print("Alphas and Betas do not match")
 
 def external_animate_bloch(alpha_reals, alpha_imags, beta_reals, beta_imags, filename):
     if filename == "":
