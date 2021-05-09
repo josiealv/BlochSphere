@@ -51,8 +51,25 @@ def animate_bloch_states(states, save_file, duration=0.1, save_all=False):
 
     imageio.mimsave(save_file, images, duration=duration)
     # calling gui.py file -> passing in the gif
-    gui.main(save_file)
+    # gui.main(save_file)
+    w, h = images.shape
+    fourcc = cv2.VideoWriter_fourcc('m', 'p', '4', 'v')
+    fps = 0.5
+    out = cv2.VideoWriter(save_file, fourcc, fps, (w, h))
 
+    for i in images:
+        out.write(images[i])
+    out.release()
+
+    # saves list of images into a gif
+    # imageio.mimsave(save_file, images, duration=duration)
+
+    # calling gui.py file -> passing in the gif
+    # gui.main(save_file)
+
+    # convert gif to mp4
+    # clip = mp.VideoFileClip(save_file)
+    # clip.write_videofile(save_file + ".mp4")
 
 def external_animate_bloch(alpha_reals, alpha_imags, beta_reals, beta_imags, filename):
     if filename == "":
