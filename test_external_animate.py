@@ -24,12 +24,12 @@ for i in range(0, 100):
     alphasI[i] = 0
     betasR[i] = (np.sin(omega * i) * np.exp(-i * gamma) * np.cos(phi))
     betasI[i] = (np.sin(omega * i) * np.exp(-i * gamma) * np.sin(phi))
-external_animate_bloch(alphasR, alphasI, betasR, betasI, file_no_extension)
 
 # # # example 2 (Rabi oscillations)
-# for i in range(100, 200):
-#     alphasR[i] = (np.cos(omega * i))
-#     alphasI[i] = 0
-#     betasR[i] = (np.sin(omega * i))
-#     betasI[i] = 0
-# b.external_animate_bloch(alphasR, alphasI, betasR, betasI, 'test2')
+for i in range(100, 200):
+    alphasR[i] = (np.cos(omega * i))
+    alphasI[i] = 0
+    betasR[i] = (np.sin(omega * i))
+    betasI[i] = 0
+external_animate_bloch(alphasR, alphasI, betasR, betasI, file_no_extension)
+

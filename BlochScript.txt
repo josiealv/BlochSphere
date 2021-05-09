@@ -1,4 +1,0 @@
-#!/bin/bash
-python3 test_external_animate.py
-wait
-rm temp_file.png

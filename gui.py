@@ -1,5 +1,4 @@
-from tkinter import PhotoImage, Label, Tk
-
+from tkinter import Tk, Label, Frame, PhotoImage
 from PIL import Image
 import time
 import os
@@ -26,7 +25,7 @@ def main(filename):
         frame = frames[ind]
         ind += 1
         if ind == frameCnt:
-            ind = 0
+            ind = 0    
         label.configure(image=frame)
         root.after(100, update, ind)
 

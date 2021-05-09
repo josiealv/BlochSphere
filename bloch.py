@@ -33,23 +33,19 @@ def animate_bloch_states(states, save_file, duration=0.1, save_all=False):
     b.point_marker = ['o']
     b.point_size = [30]
 
-    # for loop creates the single images for gif.
-
     for j in range(length):
         b.clear()
         b.add_states(states[j])
-        b.add_states(states[:(j + 1)], 'point')  # expensive operation that is necessary and cannot be made faster
-        if save_all:  # to save all separate images to a directory, can pass in parameter (save_all=true) to
-            # animate_bloch_states()
+        b.add_states(states[:(j + 1)], 'point')
+        if save_all:
             b.save(dirc='tmp')  # saving images to tmp directory
             filename = "tmp/bloch_%01d.png" % j
         else:
-            filename = 'temp_file.png'  # if file name is not specified, this will be the name of the gif created:
-            # - can customize name
+            filename = 'temp_file.png'
             b.save(filename)
         images[j] = (imageio.imread(filename))  # combines all the images into one gif (one image)
-
     imageio.mimsave(save_file, images, duration=duration)
+    # calling gui.py file -> passing in the gif
     # calling gui.py file -> passing in the gif
     # gui.main(save_file)
     w, h = images.shape
@@ -70,6 +66,104 @@ def animate_bloch_states(states, save_file, duration=0.1, save_all=False):
     # convert gif to mp4
     # clip = mp.VideoFileClip(save_file)
     # clip.write_videofile(save_file + ".mp4")
+
+def plot_state_vectors (states, save_file): #no animation, just show an image of multiple state vectors on the bloch sphere
+    save_file += '.png'
+    b = Bloch()
+    b.view = [-40, 30]
+    try:
+        length = len(states)
+    except:
+        length = 1
+        states = [states]
+    
+    images = [None] * length  # setting length of images array to help decrease time gif is created
+    # normalize colors to the length of data ##
+    nrm = mpl.colors.Normalize(0, length)
+    colors = cm.cool(nrm(range(length)))  # options: cool, summer, winter, autumn etc.
+    # customize sphere properties ##
+    b.point_color = list(colors)  # options: 'r', 'g', 'b' etc.
+    b.point_marker = ['o']
+    b.point_size = [30]
+    b.add_states(states)
+    b.save(save_file)
+
+def animate_multiple_states(vect_complex_arr, save_file, numV, duration=0.1, save_all=False):
+    azimuthal = -40  # can customize to chang view of gif
+    elevation = 20  # can customize to chang view of gif
+    b = Bloch()
+    b.view = [-40, 30]
+    try:
+        length = 0
+        for i in range(len(vect_complex_arr)): # number of frames are gonna be max length of vectors amongst all animations 
+            if (len(vect_complex_arr[i]) >= length):
+                length = len(vect_complex_arr[i])
+    except:
+        length = 1
+        states = [states]
+    
+    images = [None] * length  # setting length of images array to help decrease time gif is created
+    # normalize colors to the length of data ##
+    nrm = mpl.colors.Normalize(0, length)
+    # colors = cm.cool(nrm(range(length)))  # options: cool, summer, winter, autumn etc.
+    # customize sphere properties ##
+    # b.point_color = list(colors)  # options: 'r', 'g', 'b' etc.
+    b.point_marker = ['o']
+    b.point_size = [30]
+
+    for j in range(length):
+        b.clear()
+        curr_vect_complex_arr = [] #get all vectors for this frame
+        for k in range (numV): 
+            curr_vect_len = len(vect_complex_arr[k])
+            if (j < curr_vect_len):
+                curr_vect_complex_arr.append(vect_complex_arr[k][j])
+            else:
+                curr_vect_complex_arr.append(vect_complex_arr[k][curr_vect_len-1]) #animation for current vector done, make it static
+        b.add_states(curr_vect_complex_arr) #add all state vectors to bloch animation
+        
+        for l in range (numV): #add points for each state vector
+            curr_vect_len = len(vect_complex_arr[l])
+            temp_point_arr = []
+            if (j < curr_vect_len):
+                temp_point_arr.append(vect_complex_arr[l][:(j + 1)])
+            else:
+                temp_point_arr.append(vect_complex_arr[l][:((curr_vect_len-1)+1)])
+            b.add_states(temp_point_arr, 'point')
+        
+        if save_all:
+            b.save(dirc='tmp')  # saving images to tmp directory
+            filename = "tmp/bloch_%01d.png" % j
+        else:
+            filename = 'temp_file.png'
+            b.save(filename)
+        images[j] = (imageio.imread(filename))  # combines all the images into one gif (one image)
+    imageio.mimsave(save_file, images, duration=duration)
+    # calling gui.py file -> passing in the gif
+    gui.main(save_file)
+
+def external_animate_bloch_multiple(numV, alpha_reals, alpha_imags, beta_reals, beta_imags, filename):
+    if(len(alpha_reals)!= numV):
+        print ("Number of state vectors does not equal amount inputted")
+        return 
+    if(len(alpha_reals)==len(beta_reals)):
+        for i in range (0, len(alpha_reals)):
+            if(len(alpha_reals[i])!=len(beta_reals[i])):
+                print("Alphas and Betas do not match")
+                return
+        filename += ".gif"
+        vect_complex_arr = [] #2d vector to hold all vector animations      
+        for j in range (0, numV):
+            complex_arr = []
+            for k in range (0, len(alpha_reals[j])):
+                alpha = complex(alpha_reals[j][k], alpha_imags[j][k])
+                beta = complex(beta_reals[j][k], beta_imags[j][k])
+                # appending alpha and beta to complex_arr array
+                complex_arr.append((alpha * basis(2, 0) + beta * basis(2, 1)))
+            vect_complex_arr.append(complex_arr)
+        animate_multiple_states (vect_complex_arr, filename, numV)
+    else:
+        print("Alphas and Betas do not match") 
 
 def external_animate_bloch(alpha_reals, alpha_imags, beta_reals, beta_imags, filename):
     if filename == "":
