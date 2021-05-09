@@ -1,7 +1,8 @@
 from bloch import external_animate_bloch
 import numpy as np
 
-length = 200
+# length = 200  # uncomment if you also want to animate rabi oscillations with exponential decay example
+length = 100    # uncomment if you want a single example aniamted (double check the bounds of the for loops)
 betasR = [None] * length
 alphasR = [None] * length
 alphasI = [None] * length
@@ -15,7 +16,7 @@ gamma = .01  # customize gamma here
 #   Reminder: DO NOT ADD AN EXTENSION TO THE NAME (ie. {...}.gif)
 #   If no relative path is provided, it will save to the directory in which the program is running in.
 # ---------------
-file_no_extension = "test"
+file_no_extension = "test_new"
 phi = (np.pi * 3) / 4
 
 # example 1 (exponential decay)
@@ -26,10 +27,10 @@ for i in range(0, 100):
     betasI[i] = (np.sin(omega * i) * np.exp(-i * gamma) * np.sin(phi))
 
 # # # example 2 (Rabi oscillations)
-for i in range(100, 200):
-    alphasR[i] = (np.cos(omega * i))
-    alphasI[i] = 0
-    betasR[i] = (np.sin(omega * i))
-    betasI[i] = 0
+# for i in range(100, 200):
+#     alphasR[i] = (np.cos(omega * i))
+#     alphasI[i] = 0
+#     betasR[i] = (np.sin(omega * i))
+#     betasI[i] = 0
 external_animate_bloch(alphasR, alphasI, betasR, betasI, file_no_extension)
 

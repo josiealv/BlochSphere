@@ -5,10 +5,34 @@ from math import atan2
 import matplotlib as mpl
 import imageio
 from matplotlib import cm
+import cv2
 import numpy as np
 from qutip import Bloch3d, basis, Bloch
 import gui
+import gui_mp4
 
+kargs = {'macro_block_size': None }
+
+def plot_state_vectors (states, save_file): #no animation, just show an image of multiple state vectors on the bloch sphere
+    save_file += '.png'
+    b = Bloch()
+    b.view = [-40, 30]
+    try:
+        length = len(states)
+    except:
+        length = 1
+        states = [states]
+    
+    images = [None] * length  # setting length of images array to help decrease time gif is created
+    # normalize colors to the length of data ##
+    nrm = mpl.colors.Normalize(0, length)
+    colors = cm.cool(nrm(range(length)))  # options: cool, summer, winter, autumn etc.
+    # customize sphere properties ##
+    b.point_color = list(colors)  # options: 'r', 'g', 'b' etc.
+    b.point_marker = ['o']
+    b.point_size = [30]
+    b.add_states(states)
+    b.save(save_file)
 
 def animate_bloch_states(states, save_file, duration=0.1, save_all=False):
     azimuthal = -40  # can customize to change view of gif
@@ -44,49 +68,25 @@ def animate_bloch_states(states, save_file, duration=0.1, save_all=False):
             filename = 'temp_file.png'
             b.save(filename)
         images[j] = (imageio.imread(filename))  # combines all the images into one gif (one image)
-    imageio.mimsave(save_file, images, duration=duration)
-    # calling gui.py file -> passing in the gif
+    imageio.mimsave(save_file, images, **kargs)
     # calling gui.py file -> passing in the gif
     # gui.main(save_file)
-    w, h = images.shape
-    fourcc = cv2.VideoWriter_fourcc('m', 'p', '4', 'v')
+    w, h, layers = images[0].shape
     fps = 0.5
-    out = cv2.VideoWriter(save_file, fourcc, fps, (w, h))
+    out = cv2.VideoWriter(save_file, -1, fps, (w, h))
 
     for i in images:
-        out.write(images[i])
+        out.write(i)
+    cv2.destroyAllWindows()
     out.release()
+    gui_mp4.main(save_file)
 
     # saves list of images into a gif
     # imageio.mimsave(save_file, images, duration=duration)
 
-    # calling gui.py file -> passing in the gif
-    # gui.main(save_file)
-
     # convert gif to mp4
     # clip = mp.VideoFileClip(save_file)
     # clip.write_videofile(save_file + ".mp4")
-
-def plot_state_vectors (states, save_file): #no animation, just show an image of multiple state vectors on the bloch sphere
-    save_file += '.png'
-    b = Bloch()
-    b.view = [-40, 30]
-    try:
-        length = len(states)
-    except:
-        length = 1
-        states = [states]
-    
-    images = [None] * length  # setting length of images array to help decrease time gif is created
-    # normalize colors to the length of data ##
-    nrm = mpl.colors.Normalize(0, length)
-    colors = cm.cool(nrm(range(length)))  # options: cool, summer, winter, autumn etc.
-    # customize sphere properties ##
-    b.point_color = list(colors)  # options: 'r', 'g', 'b' etc.
-    b.point_marker = ['o']
-    b.point_size = [30]
-    b.add_states(states)
-    b.save(save_file)
 
 def animate_multiple_states(vect_complex_arr, save_file, numV, duration=0.1, save_all=False):
     azimuthal = -40  # can customize to chang view of gif
@@ -179,7 +179,7 @@ def external_animate_bloch(alpha_reals, alpha_imags, beta_reals, beta_imags, fil
             # appending alpha and beta to complex_arr array
             complex_arr.append((alpha * basis(2, 0) + beta * basis(2, 1)))
         # adding file extension to the filename
-        filename += ".gif"
+        filename += ".mp4"
         # calling function to create the bloch sphere gif
         animate_bloch_states(complex_arr, filename, duration=0.1, save_all=False)
     else:

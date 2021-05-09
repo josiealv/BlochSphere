@@ -1,11 +1,9 @@
 .idea
 venv
-<<<<<<< HEAD
 test.gif
 __pycache__
-=======
 __pycache__/
 temp_file.png
+*.DS_Store
 
 
->>>>>>> ef7f6123f16f33daac4bfc55646de8d11cc3bbac
