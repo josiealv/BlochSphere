@@ -9,16 +9,20 @@ import numpy as np
 from qutip import Bloch3d, basis, Bloch
 import gui
 
+
 def animate_bloch_states(states, save_file, duration=0.1, save_all=False):
-    b = Bloch()
+    azimuthal = -40  # can customize to change view of gif
+    elevation = 20  # can customize to change view of gif
+    print("file name: %s" % save_file)  # printing out inputted file name in the terminal
+    b = Bloch()  # creating bloch object
     b.vector_color = ['r']
-    b.view = [-40, 30]
+    b.view = [azimuthal, elevation]  # setting view of vector in sphere
     try:
-        length = len(states)
+        length = len(states)  # getting length of vectors
     except:
-        length = 1
+        length = 1  # sets length of vector to 1 if not a valid length
         states = [states]
-    
+
     images = [None] * length  # setting length of images array to help decrease time gif is created
     # normalize colors to the length of data ##
     nrm = mpl.colors.Normalize(0, length)
@@ -42,7 +46,26 @@ def animate_bloch_states(states, save_file, duration=0.1, save_all=False):
         images[j] = (imageio.imread(filename))  # combines all the images into one gif (one image)
     imageio.mimsave(save_file, images, duration=duration)
     # calling gui.py file -> passing in the gif
-    gui.main(save_file)
+    # calling gui.py file -> passing in the gif
+    # gui.main(save_file)
+    w, h = images.shape
+    fourcc = cv2.VideoWriter_fourcc('m', 'p', '4', 'v')
+    fps = 0.5
+    out = cv2.VideoWriter(save_file, fourcc, fps, (w, h))
+
+    for i in images:
+        out.write(images[i])
+    out.release()
+
+    # saves list of images into a gif
+    # imageio.mimsave(save_file, images, duration=duration)
+
+    # calling gui.py file -> passing in the gif
+    # gui.main(save_file)
+
+    # convert gif to mp4
+    # clip = mp.VideoFileClip(save_file)
+    # clip.write_videofile(save_file + ".mp4")
 
 def plot_state_vectors (states, save_file): #no animation, just show an image of multiple state vectors on the bloch sphere
     save_file += '.png'
@@ -140,7 +163,7 @@ def external_animate_bloch_multiple(numV, alpha_reals, alpha_imags, beta_reals, 
             vect_complex_arr.append(complex_arr)
         animate_multiple_states (vect_complex_arr, filename, numV)
     else:
-        print("Alphas and Betas do not match")
+        print("Alphas and Betas do not match") 
 
 def external_animate_bloch(alpha_reals, alpha_imags, beta_reals, beta_imags, filename):
     if filename == "":
@@ -187,9 +210,8 @@ def main():
                 #   3)  calling function to create the bloch sphere gif
                 for i in range(0, len(arr_norm), 2):
                     complex_array.append((complex(arr_norm[i]) * basis(2, 0) + complex(arr_norm[i + 1]) * basis(2, 1)))
-                filename = input("type in filename (without extension) e.g. 'test_file' ") # + ".gif"
-                #animate_bloch_states(complex_array, filename, duration=0.1, save_all=False)
-                # plot_state_vectors(complex_array, filename)
+                filename = input("type in filename (without extension) e.g. 'test_file' ") + ".gif"
+                animate_bloch_states(complex_array, filename, duration=0.1, save_all=False)
             else:
                 print("Each state vector must have an alpha and a beta")
 
