@@ -21,6 +21,11 @@ Data Visualisation of a Bloch Sphere
 5. Install imageio-ffmpeg
     - Run on command line: `pip3 install imageio-ffmpeg`
         - More info: https://github.com/imageio/imageio-ffmpeg
+## Running from the Command Line
+- To animate from the command line, run: ` Python3 main.py *s or m*`
+    - use `s` if you want to generate a single animation or image
+    - use `m` if you want to animate multiple animations onto the same file
+- From there, the rest of the program will guide you 
 
 ## About external_animate_bloch()
 - The first 4 parameters of the function represent the real and imaginary components of complex number, alpha and beta
@@ -79,8 +84,9 @@ Data Visualisation of a Bloch Sphere
         - `betas_reals.append(beta_r2)`
         - `betas_imags.append(beta_i2)`
             - adding the arrays for the second animation to our 2D arrays
-        - So if you were to access `alphasR[0]` you would get the `alpha_r1` array, representing the first half of `alpha1` which is also part of the first animation. (This isn't the only way to create the 2D arrays in python, this is just most straightfoward method without using a for loop)
-## Animating from Separate Python File
+        - So, if you were to access `alphasR[0]` you would get the `alpha_r1` array, representing the first half of `alpha1` which is also part of the first animation. (This isn't the only way to create the 2D arrays in python, this is just most straightfoward method without using a for loop)
+
+## Animating & Plotting from Separate Python File
 1. Import the bloch.py file into the python file you want to call the function from
      - `import bloch as *name here*`
     - If in different directory where the path is: 

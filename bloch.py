@@ -84,35 +84,31 @@ def animate_bloch_states(states, save_file, file_type, duration=0.1, save_all=Fa
         # calling gui_gif.py file -> passing in the gif
         gui_gif.main(save_file)
 
-def animate_multiple_states(vect_complex_arr, save_file, file_type, numV, duration=0.1, save_all=False):
+def animate_multiple_bloch_states(vect_complex_arr, save_file, file_type, numV, duration=0.1, save_all=False):
     azimuthal = -40  # can customize to chang view of gif
     elevation = 20  # can customize to chang view of gif
     b = Bloch()
     b.view = [-40, 30]
     try:
         length = 0
-        for i in range(len(vect_complex_arr)): # number of frames are gonna be max length of vectors amongst all animations 
+        for i in range(numV): # number of frames will be max length of vectors amongst all animations 
             if (len(vect_complex_arr[i]) >= length):
                 length = len(vect_complex_arr[i])
     except:
         length = 1
         states = [states]
     
-    images = [None] * length  # setting length of images array to help decrease time gif is created
+    images = [None] * length  # setting length of images array to help decrease time gif/mp4 is created
     # normalize colors to the length of data ##
     nrm = mpl.colors.Normalize(0, length)
-    # colors = cm.cool(nrm(range(length)))  # options: cool, summer, winter, autumn etc.
-    # customize sphere properties ##
-    # b.point_color = list(colors)  # options: 'r', 'g', 'b' etc.
     b.point_marker = ['o']
     b.point_size = [30]
-
     for j in range(length):
         b.clear()
         curr_vect_complex_arr = [] #get all vectors for this frame
         for k in range (numV): 
             curr_vect_len = len(vect_complex_arr[k])
-            if (j < curr_vect_len):
+            if (j <= (curr_vect_len-1)):
                 curr_vect_complex_arr.append(vect_complex_arr[k][j])
             else:
                 curr_vect_complex_arr.append(vect_complex_arr[k][curr_vect_len-1]) #animation for current vector done, make it static
@@ -126,9 +122,9 @@ def animate_multiple_states(vect_complex_arr, save_file, file_type, numV, durati
             else:
                 temp_point_arr.append(vect_complex_arr[l][:((curr_vect_len-1)+1)])
             b.add_states(temp_point_arr, 'point')
-        
+
         if save_all:
-            b.save(dirc='tmp')  # saving images to tmp directory
+            b.save(dirc='tmp')  # saving frames to tmp directory
             filename = "tmp/bloch_%01d.png" % j
         else:
             filename = 'temp_file.png'
@@ -183,7 +179,7 @@ def external_animate_bloch_multiple(numV, alpha_reals, alpha_imags, beta_reals, 
                 # appending alpha and beta to complex_arr array
                 complex_arr.append((alpha * basis(2, 0) + beta * basis(2, 1)))
             vect_complex_arr.append(complex_arr)
-        animate_multiple_states (vect_complex_arr, filename, file_type, numV)
+        animate_multiple_bloch_states (vect_complex_arr, filename, file_type, numV)
     else:
         print("Alphas and Betas do not match") 
 
@@ -212,43 +208,3 @@ def external_animate_bloch(alpha_reals, alpha_imags, beta_reals, beta_imags, fil
         animate_bloch_states(complex_arr, filename, file_type, duration=0.1, save_all=False)
     else:
         print("Alphas and Betas length do not match")
-
-def main():
-    # if else statements are checking command line arguments are valid
-    if sys.argv[0] != "bloch.py":
-        pass
-    else:
-        #                                       argv[0]  argv[1]    argv[2]
-        # to run command looks like >> Python3 bloch.py anim/img [list of vectors]
-        num_args = len(sys.argv)
-        if num_args < 3:
-            print("Not enough command line arguments.")
-        elif num_args > 3:
-            print("Too many command line arguments.")
-        # splitting each vector by the ","
-        arr_norm = sys.argv[2].split(",")
-        # making sure there are an alpha and a beta per vector inputs (so length of array needs to be divisible
-        # by 2)
-        if len(arr_norm) % 2 == 0:
-            complex_array = []
-            #   for each vector input:
-            #   1)  converting alpha/beta to complex and calculating the xy points for the bloch sphere
-            #   2)  appending to array
-            #   3)  calling function to create the bloch sphere gif
-            for i in range(0, len(arr_norm), 2):
-                complex_array.append((complex(arr_norm[i]) * basis(2, 0) + complex(arr_norm[i + 1]) * basis(2, 1)))
-            filename = input("type in filename (without extension) e.g. 'test_file': ")
-        else:
-            print("Each state vector must have an alpha and a beta")
-            return
-        if(sys.argv[1] == 'anim'):
-            file_type = input("type in file type (gif or mp4) e.g. 'gif': ")
-            filename += '.' + file_type
-            animate_bloch_states(complex_array, filename, file_type, duration=0.1, save_all=False)
-        elif(sys.argv[1] == 'img'):
-            plot_state_vectors(complex_array, filename)
-        else:
-            print("Please specify if plot is animation or image with: 'anim' or 'img', respectively")
-            return
-
-main()

@@ -8,7 +8,7 @@ alphasR = []
 alphasI = [] 
 omega = .05  # customize omega here
 gamma = .01  # customize gamma here
-
+phi = (np.pi * 3) / 4
 # ---------------
 #   For the file name, provide the absolute path and then the name of what you want it to be saved without an extension
 #   Ex: /users/name/Desktop/{name_you_want}
@@ -17,7 +17,6 @@ gamma = .01  # customize gamma here
 # ---------------
 filename_no_extension = "test_multiple"
 file_type = 'mp4'
-phi = (np.pi * 3) / 4
 
 # example 1 (exponential decay)
 betas_r = []
