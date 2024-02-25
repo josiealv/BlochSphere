@@ -1,45 +1,36 @@
 from bloch import animate_bloch_states, animate_multiple_bloch_states, plot_state_vectors
 import sys
 from qutip.states import basis
+from utils import getQuantumStates
 
 def get_single_plotanim_input():
-    plot_type = input("Animation or Image? Enter 'anim' for animation or 'img' for image: ")
-    arr_norm = []
-    value = input("Enter complex numbers for alpha and beta (e.g. '1+2j' where '2j' represents the imaginary part) \n" + 
-    "Type 'd' and 'enter' when you're done inputting your alpha(s) and beta(s): \n")
-    while (value!='d'): # d for done
-        arr_norm.append(value)
-        value = input()
-    # making sure there are an alpha and a beta per vector inputs (so length of array needs to be divisible
-    # by 2)
-    if len(arr_norm) % 2 == 0:
-        complex_array = []
-        #   for each vector input:
-        #   1)  converting alpha/beta to complex and calculating the xy points for the bloch sphere
-        #   2)  appending to array
-        #   3)  calling function to create the bloch sphere gif
-        for i in range(0, len(arr_norm), 2):
-            complex_array.append((complex(arr_norm[i]) * basis(2, 0) + complex(arr_norm[i + 1]) * basis(2, 1)))
+    numQuantumStates = int(input("Enter number of Quantum States being plotted: \n"))
+    complex_array = getQuantumStates(numQuantumStates)
+
+    if complex_array:
+        # Getting filename 
         filename = input("type in filename (without extension) e.g. 'test_file': ")
     else:
-        print("Each state vector must have an alpha and a beta")
-        return
+        raise Exception("A problem occurred when generating Quantum State vectors! Ending program...")
+    
+    plot_type = input("Animation or Image? Enter 'anim' for animation or 'img' for image: ")
+
+    # Get file type and generate name of file before calling plotting function
     if(plot_type == 'anim'):
         file_type = input("type in file type (gif or mp4) e.g. 'gif': ")
         filename += '.' + file_type
-        animate_bloch_states(complex_array, filename, file_type, duration=0.1, save_all=False)
+        animate_bloch_states(complex_array, filename, file_type)
     elif(plot_type == 'img'):
         plot_state_vectors(complex_array, filename)
     else:
-        print("Please specify if plot is animation or image with: 'anim' or 'img', respectively\n")
+        raise Exception("Plot type must be specified to continue. Ending program... \n")
 
 def get_multiple_anim_input():
     numAnim = int(input ("Enter the number of animations you would like: \n"))
     arr_norm = []
     for i in range(numAnim):
         curr_arr_norm = []
-        value = input("Enter complex numbers, alpha and beta, for animation " + str(i) + "\n" +
-        "(e.g. '1+2j' where '2j' represents the imaginary part) \n" + 
+        value = input("Enter coefficents: alpha and beta (where alpha and beta are real numbers), for animation " + str(i) + "\n" +
         "Type 'd' and 'enter' when you're done inputting your alpha(s) and beta(s): \n")
         while (value!='d'): # d for done
             curr_arr_norm.append(value)

@@ -17,7 +17,7 @@ gamma = .01  # customize gamma here
 #   If no relative path is provided, it will save to the directory in which the program is running in.
 # ---------------
 filename_no_extension = "test"
-file_type = 'mp4'
+file_type = 'gif'
 phi = (np.pi * 3) / 4
 
 # example 1 (exponential decay)

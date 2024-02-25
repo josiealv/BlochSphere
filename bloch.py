@@ -1,7 +1,3 @@
-import sys
-from cmath import pi, sin, cos
-from math import atan2
-
 import matplotlib as mpl
 import imageio
 from matplotlib import cm
@@ -10,30 +6,32 @@ import numpy as np
 from qutip import Bloch3d, basis, Bloch
 import gui_gif
 import gui_mp4
+from utils import create_open_gif, create_open_mp4
 
-kargs = {'macro_block_size': None }
-def create_open_mp4(images, save_file):
-    imageio.mimsave(save_file, images, **kargs) # save images into mp4
-    w, h, layers = images[0].shape # get dimensions of images
-    fps = 0.5 # frames per second
-    out = cv2.VideoWriter(save_file, -1, fps, (w, h)) # start creating the mp4
-    for i in images:
-        out.write(i) # 'writing' the images into the mp4
-    cv2.destroyAllWindows() 
-    out.release()
-    # calling gui_mp4.py file -> passing in the mp4
-    gui_mp4.main(save_file) 
+# kargs = {'macro_block_size': None }
+# def create_open_mp4(images, save_file):
+#     imageio.mimsave(save_file, images, **kargs) # save images into mp4
+#     w, h, layers = images[0].shape # get dimensions of images
+#     fps = 0.5 # frames per second
+#     out = cv2.VideoWriter(save_file, -1, fps, (w, h)) # start creating the mp4
+#     for i in images:
+#         out.write(i) # 'writing' the images into the mp4
+#     cv2.destroyAllWindows() 
+#     out.release()
+#     # calling gui_mp4.py file -> passing in the mp4
+#     gui_mp4.main(save_file) 
 
-def create_open_gif(images, save_file, duration):
-    # saves list of images into a gif
-    imageio.mimsave(save_file, images, duration=duration)
-    # calling gui_gif.py file -> passing in the gif
-    gui_gif.main(save_file)
+# def create_open_gif(images, save_file, duration):
+#     # saves list of images into a gif
+#     imageio.mimsave(save_file, images, duration=duration)
+#     # calling gui_gif.py file -> passing in the gif
+#     gui_gif.main(save_file)
 
 def plot_state_vectors (states, save_file): #no animation, just show an image of multiple state vectors on the bloch sphere
     save_file += '.png'
     b = Bloch()
     b.view = [-40, 30]
+    images = []
     try:
         length = len(states)
     except:
@@ -46,8 +44,11 @@ def plot_state_vectors (states, save_file): #no animation, just show an image of
     b.point_color = list(colors)  # options: 'r', 'g', 'b' etc.
     b.point_marker = ['o']
     b.point_size = [30]
-    b.add_states(states)
-    b.save(save_file)
+
+    for j in range(length):
+        b.add_states(states[j])
+        b.add_states(states[:(j + 1)], 'point')
+        b.save(save_file)
 
 def animate_bloch_states(states, save_file, file_type, duration=0.1, save_all=False):
     azimuthal = -40  # can customize to change view of gif
@@ -82,7 +83,7 @@ def animate_bloch_states(states, save_file, file_type, duration=0.1, save_all=Fa
         else:
             filename = 'temp_file.png'
             b.save(filename)
-        images[j] = (imageio.imread(filename))  # combines all the images into one gif (one image)
+        images.append(imageio.imread(filename))  # combines all the images into one gif (one image)
 
     if(file_type=='mp4'):
         create_open_mp4(images, save_file)
@@ -90,8 +91,8 @@ def animate_bloch_states(states, save_file, file_type, duration=0.1, save_all=Fa
         create_open_gif(images, save_file, duration)
 
 def animate_multiple_bloch_states(vect_complex_arr, save_file, file_type, numV, duration=0.1, save_all=False):
-    azimuthal = -40  # can customize to chang view of gif
-    elevation = 20  # can customize to chang view of gif
+    azimuthal = -40  # can customize to change view of gif
+    elevation = 20  # can customize to change view of gif
     b = Bloch()
     b.view = [-40, 30]
     try:
@@ -191,6 +192,7 @@ def external_animate_bloch(alpha_reals, alpha_imags, beta_reals, beta_imags, fil
     if filename == "":
         print("Need to have a filename")
         return
+    
     # checking that parameters match
     if ((len(alpha_reals) == len(beta_reals)) and 
     (len(alpha_imags) == len(beta_imags)) and

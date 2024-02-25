@@ -9,7 +9,7 @@ def main(filename):
     # Check if camera opened successfully
     if (cap.isOpened()== False): 
         print("Error opening video file")
-    
+
     # Read until video is completed
     while(cap.isOpened()):
         # Capture frame-by-frame
