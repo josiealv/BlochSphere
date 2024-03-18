@@ -1,54 +1,52 @@
 from qutip.states import basis
-import imageio
-import cv2
-import gui_gif
-import gui_mp4
 
-kargs = {'macro_block_size': None }
-def create_open_mp4(images, save_file):
-    imageio.mimsave(save_file, images, **kargs) # save images into mp4
-    w, h, layers = images[0].shape # get dimensions of images
-    fps = 0.5 # frames per second
-    out = cv2.VideoWriter(save_file, -1, fps, (w, h)) # start creating the mp4
-    for i in images:
-        out.write(i) # 'writing' the images into the mp4
-    cv2.destroyAllWindows() 
-    out.release()
-    # calling gui_mp4.py file -> passing in the mp4
-    gui_mp4.main(save_file) 
+ALPHA_STR = "alpha"
+BETA_STR = "beta"
 
-def create_open_gif(images, save_file, duration):
-    # saves list of images into a gif
-    imageio.mimsave(save_file, images, duration=duration)
-    # calling gui_gif.py file -> passing in the gif
-    gui_gif.main(save_file)
+ENTER_REAL_NUM = "Enter a real number (i.e. int) for "
+ENTER_REAL_PART_STR = "Enter real part of "
+ENTER_IMAGINARY_PART_STR = "Enter imaginary part of "
+ENTER_Y_N = "Enter 'y' or 'n'\n"
 
-#   for each vector input:
-#   1)  converting alpha/beta to complex and calculating the xy points for the bloch sphere
-#   2)  appending to array
+
 def getQuantumStates(numQuantumStates):
     complex_array = []
     for i in range (0, numQuantumStates):
         print(f"Inputs for Quantum State #{i+1}:\n")
-        alpha = 0
-        beta = 0
-        complexAlpha = input("Is alpha a complex number? Enter 'y' or 'n' \n")
+        alphaState = 0
+        betaState = 0
+        complexAlpha = input("Is alpha a complex number? " + ENTER_Y_N)
         if (complexAlpha == 'y'):
-            alphaR = int(input("Enter real part of alpha: \n"))
-            alphaI = int(input("Enter imaginary part of alpha \n"))
-            alpha = complex(alphaR, alphaI)
+            alphaState = __getComplex(ALPHA_STR)
         else:
-            alphaR = int(input("Enter a real number for alpha (i.e. an int): \n"))
-            alpha = complex(alphaR)
+            alphaState = __getReal(ALPHA_STR)
 
-        complexBeta = input("Is beta a complex number? Enter 'y' or 'n' \n")
+        complexBeta = input("Is beta a complex number? " + ENTER_Y_N)
         if (complexBeta == 'y'):
-            betaR = int(input("Enter real part of beta: \n"))
-            betaI = int(input ("Enter imaginary part of beta \n"))
-            beta = complex(betaR, betaI)
+            betaState = __getComplex(BETA_STR)
         else:
-            betaR = int(input("Enter a real number for beta (i.e. an int): \n"))
-            beta = complex(betaR)
-        complex_array.append(alpha * basis(2, 0) + beta * basis(2, 1))
+            betaState = __getReal(BETA_STR)
+        
+        print(f"alpha: {alphaState} and beta: {betaState}\n")
+        complex_array.append((alphaState * basis(2, 0)) + (betaState * basis(2, 1)))
+
     return complex_array
+
+def __getComplex(val):
+    try: 
+     return complex(float(input(ENTER_REAL_PART_STR + val + ':\n')), 
+                   float(input(ENTER_IMAGINARY_PART_STR + val + ':\n')))
+    except(ValueError, RuntimeError):
+        print(f"Error occurred when inputting: {val}! Making {val} 1...")
+        return complex(1)    
+
+def __getReal(val):
+    try:
+        real = int(input(ENTER_REAL_NUM + val + ':\n'))
+        if(real == 0):
+            return complex()
+        return complex(real, 0)
+    except(ValueError, RuntimeError):
+        print(f"Error occurred when inputting: {val}! Making {val} 1...")
+        return complex(1)  
         

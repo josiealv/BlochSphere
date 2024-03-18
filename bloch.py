@@ -6,26 +6,26 @@ import numpy as np
 from qutip import Bloch3d, basis, Bloch
 import gui_gif
 import gui_mp4
-from utils import create_open_gif, create_open_mp4
 
-# kargs = {'macro_block_size': None }
-# def create_open_mp4(images, save_file):
-#     imageio.mimsave(save_file, images, **kargs) # save images into mp4
-#     w, h, layers = images[0].shape # get dimensions of images
-#     fps = 0.5 # frames per second
-#     out = cv2.VideoWriter(save_file, -1, fps, (w, h)) # start creating the mp4
-#     for i in images:
-#         out.write(i) # 'writing' the images into the mp4
-#     cv2.destroyAllWindows() 
-#     out.release()
-#     # calling gui_mp4.py file -> passing in the mp4
-#     gui_mp4.main(save_file) 
 
-# def create_open_gif(images, save_file, duration):
-#     # saves list of images into a gif
-#     imageio.mimsave(save_file, images, duration=duration)
-#     # calling gui_gif.py file -> passing in the gif
-#     gui_gif.main(save_file)
+kargs = {'macro_block_size': None }
+def create_open_mp4(images, save_file):
+    imageio.mimsave(save_file, images, **kargs) # save images into mp4
+    w, h, layers = images[0].shape # get dimensions of images
+    fps = 0.5 # frames per second
+    out = cv2.VideoWriter(save_file, -1, fps, (w, h)) # start creating the mp4
+    for i in images:
+        out.write(i) # 'writing' the images into the mp4
+    cv2.destroyAllWindows() 
+    out.release()
+    # calling gui_mp4.py file -> passing in the mp4
+    gui_mp4.main(save_file) 
+
+def create_open_gif(images, save_file, duration):
+    # saves list of images into a gif
+    imageio.mimsave(save_file, images, duration=duration)
+    # calling gui_gif.py file -> passing in the gif
+    gui_gif.main(save_file)
 
 def plot_state_vectors (states, save_file): #no animation, just show an image of multiple state vectors on the bloch sphere
     save_file += '.png'
@@ -48,7 +48,7 @@ def plot_state_vectors (states, save_file): #no animation, just show an image of
     for j in range(length):
         b.add_states(states[j])
         b.add_states(states[:(j + 1)], 'point')
-        b.save(save_file)
+    b.save(save_file)
 
 def animate_bloch_states(states, save_file, file_type, duration=0.1, save_all=False):
     azimuthal = -40  # can customize to change view of gif
