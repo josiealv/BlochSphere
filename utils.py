@@ -26,8 +26,6 @@ def getQuantumStates(numQuantumStates):
             betaState = __getComplex(BETA_STR)
         else:
             betaState = __getReal(BETA_STR)
-        
-        print(f"alpha: {alphaState} and beta: {betaState}\n")
         complex_array.append((alphaState * basis(2, 0)) + (betaState * basis(2, 1)))
 
     return complex_array
@@ -45,7 +43,7 @@ def __getReal(val):
         real = int(input(ENTER_REAL_NUM + val + ':\n'))
         if(real == 0):
             return complex()
-        return complex(real, 0)
+        return complex(real)
     except(ValueError, RuntimeError):
         print(f"Error occurred when inputting: {val}! Making {val} 1...")
         return complex(1)  
