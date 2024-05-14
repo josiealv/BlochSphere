@@ -143,49 +143,26 @@ def animate_multiple_bloch_states(vect_complex_arr, save_file, file_type, numV, 
         create_open_gif(images, save_file, duration)
 
 #creates the complex vector states for multiple animations
-def external_animate_bloch_multiple(numV, alpha_reals, alpha_imags, beta_reals, beta_imags, filename, file_type):
-    if(len(alpha_reals)!= numV): 
+def external_animate_bloch_multiple(numV, coefficients_arr, filename, file_type):
+    if(len(coefficients_arr)!= numV): 
         print ("Number of animations for state vectors array does not equal amount inputted")
         return 
-    if((len(alpha_reals)==len(beta_reals)) and 
-    (len(alpha_imags)==len(beta_imags)) and
-    (len(alpha_reals)==len(alpha_imags)) and
-    (len(beta_reals)==len(beta_imags))):
-        for i in range (0, len(alpha_reals)): # check if alpha and beta reals match
-            if(len(alpha_reals[i])!=len(beta_reals[i])):
-                print("Alphas and Betas do not match")
-                return
-        for j in range (0, len(alpha_imags)): # check if alpha and beta imaginaries match
-            if(len(alpha_imags[j])!=len(beta_imags[j])):
-                print("Alphas and Betas do not match")
-                return
-        for i in range (0, len(alpha_reals)): # check if alphas match
-            if(len(alpha_reals[i])!=len(alpha_imags[i])):
-                print("Alphas do not match")
-                return
-        for j in range (0, len(alpha_imags)): # check if betas match
-            if(len(beta_reals[j])!=len(beta_imags[j])):
-                print("Betas do not match")
-                return
-        # adding file extension (gif or mp4) to the filename 
-        if(file_type=='gif' or file_type=='mp4'):
-            filename += "." + file_type
-        else:
-            print("Invalid file type. Please specify 'gif' or 'mp4'")
-            return
-
-        vect_complex_arr = [] #2d vector to hold all vector animations      
-        for j in range (0, numV):
-            complex_arr = []
-            for k in range (0, len(alpha_reals[j])):
-                alpha = complex(alpha_reals[j][k], alpha_imags[j][k])
-                beta = complex(beta_reals[j][k], beta_imags[j][k])
-                # appending alpha and beta to complex_arr array
-                complex_arr.append((alpha * basis(2, 0) + beta * basis(2, 1)))
-            vect_complex_arr.append(complex_arr)
-        animate_multiple_bloch_states (vect_complex_arr, filename, file_type, numV)
+    
+    vect_complex_arr = [] #2d vector to hold all vector animations      
+    for j in range (0, numV):
+        complex_arr = []
+        for coefficient in coefficients_arr[j]:
+            complex_arr.append((coefficient.alpha * basis(2, 0) + coefficient.beta * basis(2, 1))) # how to make complex + include imaginary #s?
+        vect_complex_arr.append(complex_arr)
+    
+    if(file_type=='gif' or file_type=='mp4'):
+        filename += "." + file_type
     else:
-        print("Alphas and Betas do not match") 
+        print("Invalid file type. Please specify 'gif' or 'mp4'")
+        return
+
+
+    animate_multiple_bloch_states (vect_complex_arr, filename, file_type, numV)
 
 # creates the complex vector states for a single animation
 def external_animate_bloch(alpha_reals, alpha_imags, beta_reals, beta_imags, filename, file_type):
@@ -210,7 +187,7 @@ def external_animate_bloch(alpha_reals, alpha_imags, beta_reals, beta_imags, fil
             alpha = complex(alpha_reals[k], alpha_imags[k])
             beta = complex(beta_reals[k], beta_imags[k])
             # appending alpha and beta to complex_arr array
-            complex_arr.append((alpha * basis(2, 0) + beta * basis(2, 1)))
+            complex_arr.append((alpha * basis(2, 0) + beta * basis(2, 1))) 
         # calling function to create the bloch sphere gif
         animate_bloch_states(complex_arr, filename, file_type, duration=0.1, save_all=False)
     else:
